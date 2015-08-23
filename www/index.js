@@ -8,21 +8,19 @@ ngModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
     $locationProvider.hashPrefix('!');
 
     $stateProvider
-      .state('main', {
+      .state('sa', {
+        abstract: true,
+        template: require('./components/layout.html')
+      })
+      .state('sa.main', {
         url: '/',
-        template: require('./components/main/main.html')
+        template: '<main></main>'
       });
-
-//.state('news', {
-//  abstract: true,
-//  template: '<ui-view></ui-view>',
-//  resolve: {lazy: ['$ocLazyLoad', $ocLazyLoad => $ocLazyLoad.load(`./${hash}news.js`)]}
-//})
-//.state('news.main', {
-//  url: '/news',
-//  template: '<news-main></news-main>'
-//})
   }
 ]);
+
+require('./assets/styles.css')(ngModule);
+require('./components/main/main.js')(ngModule);
+require('./components/main/factory.js')(ngModule);
 
 angular.bootstrap(document, ['app']);
