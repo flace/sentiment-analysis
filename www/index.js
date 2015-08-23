@@ -1,26 +1,29 @@
 let ngModule = angular.module('app', ['ui.router']);
 
-ngModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
-  function ($stateProvider, $urlRouterProvider, $locationProvider) {
+ngModule.config(['$stateProvider', '$urlRouterProvider',
+  function ($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise('/');
-
-    $locationProvider.html5Mode(true);
-    $locationProvider.hashPrefix('!');
 
     $stateProvider
       .state('sa', {
         abstract: true,
-        template: require('./components/layout.html')
+        template: '<layout></layout>'
       })
       .state('sa.main', {
         url: '/',
         template: '<main></main>'
+      })
+      .state('sa.about', {
+        url: '/about',
+        template: '<about></about>'
       });
   }
 ]);
 
 require('./assets/styles.css');
 require('./config.js')(ngModule);
+require('./components/layout.js')(ngModule);
+require('./components/about/about.js')(ngModule);
 require('./components/main/main.js')(ngModule);
 require('./components/main/factory.js')(ngModule);
 

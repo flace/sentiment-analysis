@@ -19,8 +19,17 @@ export default ngModule => {
       vm.model = {};
 
       vm.send = () => {
+        vm.done = false;
+        vm.loading = true;
+        vm.error = false;
         mainFactory.send(vm.model, (err, data) => {
-          console.log(err, data);
+          vm.loading = false;
+          if (err) {
+            vm.error = true;
+            return;
+          }
+          vm.result = data;
+          vm.done = true;
         });
         vm.model = {};
       };
