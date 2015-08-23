@@ -11,6 +11,8 @@ var config = {
     common: [
       'angular',
       'angular-ui-router',
+      'bootstrap',
+      './assets/libs/bootstrap/css/bootstrap.css',
       //'oclazyload',
       './index.js'
     ]
@@ -26,7 +28,12 @@ var config = {
       ON_DEV: process.env.NODE_ENV === 'development',
       ON_PROD: process.env.NODE_ENV === 'production'
     }),
-    new webpack.optimize.CommonsChunkPlugin('common', 'common.js')
+    new webpack.optimize.CommonsChunkPlugin('common', 'common.js'),
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery',
+      'window.jQuery': 'jquery'
+    })
   ],
 
   module: {
@@ -54,6 +61,31 @@ var config = {
       {
         test: /\.(png|jpg)$/,
         loader: 'url-loader?limit=8192',
+        exclude: /node_modules/
+      },
+      {
+        test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url?limit=10000&mimetype=application/font-woff",
+        exclude: /node_modules/
+      },
+      {
+        test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url?limit=10000&mimetype=application/font-woff2",
+        exclude: /node_modules/
+      },
+      {
+        test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url?limit=10000&mimetype=application/octet-stream",
+        exclude: /node_modules/
+      },
+      {
+        test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "file",
+        exclude: /node_modules/
+      },
+      {
+        test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url?limit=10000&mimetype=image/svg+xml",
         exclude: /node_modules/
       }
     ]
