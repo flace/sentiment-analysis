@@ -11,10 +11,19 @@ export default ngModule => {
   ]);
 
   ngModule.controller('MainCtrl', [
-    function () {
+    'MainFactory',
+    function (mainFactory) {
       let vm = this;
-      vm.test = 123;
-      console.log(vm);
+
+      vm.loading = false;
+      vm.model = {};
+
+      vm.send = () => {
+        mainFactory.send(vm.model, (err, data) => {
+          console.log(err, data);
+        });
+        vm.model = {};
+      };
     }
   ]);
 };

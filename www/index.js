@@ -19,7 +19,8 @@ ngModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
   }
 ]);
 
-require('./assets/styles.css')(ngModule);
+require('./assets/styles.css');
+require('./config.js')(ngModule);
 require('./components/main/main.js')(ngModule);
 require('./components/main/factory.js')(ngModule);
 

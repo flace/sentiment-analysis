@@ -1,3 +1,16 @@
 <div class="row">
-  <button class="btn">Hello{{vm.test}}</button>
+  <form ng-submit="vm.send()">
+    <div class="input-group input-group-lg">
+      <span class="input-group-addon" id="sizing-addon1">#</span>
+      <input type="text"
+             class="form-control"
+             placeholder="tag"
+             aria-describedby="sizing-addon1"
+             ng-model="vm.model.tag"
+             ng-disabled="vm.loading">
+      <span class="input-group-btn">
+        <button class="btn btn-primary" ng-disabled="vm.loading" type="submit">Go!</button>
+      </span>
+    </div>
+  </form>
 </div>
