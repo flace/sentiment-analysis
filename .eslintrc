@@ -25,7 +25,7 @@
       2,
       "always"
     ],
-    "no-console": 2,
+//    "no-console": 2,
     "no-constant-condition": 2,
     "no-control-regex": 2,
     "no-debugger": 2,
@@ -196,7 +196,7 @@
     ],
     "consistent-this": [
       2,
-      "self"
+      "vm"
     ],
     // not sure
     "eol-last": 0,

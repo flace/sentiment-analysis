@@ -48,6 +48,7 @@
     "gulp-eslint": "^1.0.0",
     "jquery": "^2.1.4",
     "oclazyload": "^1.0.4",
+    "rangen": "^0.2.2",
     "raw-loader": "^0.5.1",
     "style-loader": "^0.12.3",
     "url-loader": "^0.5.6",

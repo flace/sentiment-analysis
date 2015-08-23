@@ -5,7 +5,7 @@ var fs = require('fs');
 
 var config = {
   context: path.join(__dirname, '/www'),
-  devtool: 'source-map',
+  //devtool: 'source-map',
 
   entry: {
     common: [

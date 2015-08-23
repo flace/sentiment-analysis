@@ -1,5 +1,53 @@
-<div class="container">
-  <div class="row">
-    <button class="btn">Hello</button>
+<div class="jumbotron">
+  <h1>Analyze tweets</h1>
+
+  <p class="lead">Enter hashtag to make our python server happy, and some other words.</p>
+
+  <form ng-submit="vm.send()">
+    <div class="input-group input-group-lg">
+      <span class="input-group-addon warning" id="sizing-addon1">#</span>
+      <input type="text"
+             class="form-control"
+             placeholder="Your tag here..."
+             aria-describedby="sizing-addon1"
+             ng-model="vm.model.tag"
+             ng-disabled="vm.loading">
+  <span class="input-group-btn">
+  <button class="btn btn-success" ng-disabled="vm.loading" type="submit">Go!</button>
+  </span>
+    </div>
+  </form>
+
+</div>
+
+<div class="row marketing" ng-show="vm.done">
+  <div class="col-lg-6">
+    <h4>Tag</h4>
+
+    <p>{{vm.result.tag}}</p>
+
+    <h4>Negative</h4>
+
+    <p>{{vm.result.neg}}%</p>
   </div>
+
+  <div class="col-lg-6">
+    <h4>Count</h4>
+
+    <p>{{vm.result.count}} tweets</p>
+
+    <h4>Positive</h4>
+
+    <p>{{vm.result.pos}}%</p>
+  </div>
+</div>
+
+<div class="row loading text-center" ng-show="vm.loading">
+  <div class="dots-loader">
+    Loading…
+  </div>
+</div>
+
+<div class="row text-center" ng-show="vm.error">
+  <h3>Sorry, something went wrong</h3>
 </div>
