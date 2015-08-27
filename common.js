@@ -2879,7 +2879,7 @@ webpackJsonp([0],[
 
 	exports['default'] = function (ngModule) {
 	  var config = {};
-	  config.apiUrl =  false ? 'http://swapi.co/api/people/1' : 'http://localhost:8080';
+	  config.apiUrl =  false ? 'http://swapi.co/api/people/1' : 'http://otelnov.github.io/sentiment-analysis';
 	  ngModule.constant('config', config);
 	};
 
