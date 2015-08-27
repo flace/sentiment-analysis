@@ -18,6 +18,9 @@ export default ngModule => {
       vm.loading = false;
       vm.model = {};
 
+      vm.donutOptions = mainFactory.donutOptions;
+      vm.lineOptions = mainFactory.lineOptions;
+
       vm.send = () => {
         vm.done = false;
         vm.loading = true;
@@ -28,7 +31,9 @@ export default ngModule => {
             vm.error = true;
             return;
           }
-          vm.result = data;
+          vm.donutData = data.donut;
+          vm.lineData = data.timeseries;
+
           vm.done = true;
         });
         vm.model = {};
