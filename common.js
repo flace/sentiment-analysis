@@ -2801,7 +2801,7 @@ webpackJsonp([0],[
 
 	'use strict';
 
-	var ngModule = angular.module('app', ['ui.router']);
+	var ngModule = angular.module('app', ['ui.router', 'nvd3']);
 
 	ngModule.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
 	  $urlRouterProvider.otherwise('/');
@@ -2879,7 +2879,7 @@ webpackJsonp([0],[
 
 	exports['default'] = function (ngModule) {
 	  var config = {};
-	  config.apiUrl =  false ? 'http://swapi.co/api/people/1' : 'http://swapi.co/api/people/1';
+	  config.apiUrl =  false ? 'http://swapi.co/api/people/1' : 'http://localhost:8080';
 	  ngModule.constant('config', config);
 	};
 
@@ -2977,6 +2977,9 @@ webpackJsonp([0],[
 	    vm.model = {};
 
 	    vm.send = function () {
+	      vm.donutOptions = mainFactory.donutOptions;
+	      vm.lineOptions = mainFactory.lineOptions(vm.model);
+
 	      vm.done = false;
 	      vm.loading = true;
 	      vm.error = false;
@@ -2986,7 +2989,9 @@ webpackJsonp([0],[
 	          vm.error = true;
 	          return;
 	        }
-	        vm.result = data;
+	        vm.donutData = data.donut;
+	        vm.lineData = data.line;
+
 	        vm.done = true;
 	      });
 	      vm.model = {};
@@ -3000,7 +3005,7 @@ webpackJsonp([0],[
 /* 33 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"jumbotron\">\n  <h1>Analyze tweets</h1>\n\n  <p class=\"lead\">Enter hashtag to make our python server happy, and some other words.</p>\n\n  <form ng-submit=\"vm.send()\">\n    <div class=\"input-group input-group-lg\">\n      <span class=\"input-group-addon warning\" id=\"sizing-addon1\">#</span>\n      <input type=\"text\"\n             class=\"form-control\"\n             placeholder=\"Your tag here...\"\n             aria-describedby=\"sizing-addon1\"\n             ng-model=\"vm.model.tag\"\n             ng-disabled=\"vm.loading\">\n  <span class=\"input-group-btn\">\n  <button class=\"btn btn-success\" ng-disabled=\"vm.loading\" type=\"submit\">Go!</button>\n  </span>\n    </div>\n  </form>\n\n</div>\n\n<div class=\"row marketing\" ng-show=\"vm.done\">\n  <div class=\"col-lg-6\">\n    <h4>Tag</h4>\n\n    <p>{{vm.result.tag}}</p>\n\n    <h4>Negative</h4>\n\n    <p>{{vm.result.neg}}%</p>\n  </div>\n\n  <div class=\"col-lg-6\">\n    <h4>Count</h4>\n\n    <p>{{vm.result.count}} tweets</p>\n\n    <h4>Positive</h4>\n\n    <p>{{vm.result.pos}}%</p>\n  </div>\n</div>\n\n<div class=\"row loading text-center\" ng-show=\"vm.loading\">\n  <div class=\"dots-loader\">\n    Loading…\n  </div>\n</div>\n\n<div class=\"row text-center\" ng-show=\"vm.error\">\n  <h3>Sorry, something went wrong</h3>\n</div>\n"
+	module.exports = "<div class=\"jumbotron\">\n  <h1>Analyze tweets</h1>\n\n  <p class=\"lead\">Enter hashtag to make our python server happy, and some other words.</p>\n\n  <form ng-submit=\"vm.send()\">\n    <div class=\"input-group input-group-lg\">\n      <span class=\"input-group-addon warning\" id=\"sizing-addon1\">#</span>\n      <input type=\"text\"\n             class=\"form-control\"\n             placeholder=\"Your tag here...\"\n             aria-describedby=\"sizing-addon1\"\n             ng-model=\"vm.model.tag\"\n             ng-disabled=\"vm.loading\">\n  <span class=\"input-group-btn\">\n  <button class=\"btn btn-success\" ng-disabled=\"vm.loading\" type=\"submit\">Go!</button>\n  </span>\n    </div>\n  </form>\n</div>\n\n<div class=\"row marketing chart\" ng-if=\"vm.done\">\n  <div class=\"col-lg-12\">\n    <nvd3 options=\"vm.lineOptions\" data=\"vm.lineData\"></nvd3>\n  </div>\n</div>\n\n<div class=\"row marketing donut\" ng-if=\"vm.done\">\n  <div class=\"col-lg-12\">\n    <nvd3 options=\"vm.donutOptions\" data=\"vm.donutData\"></nvd3>\n  </div>\n</div>\n\n<div class=\"row loading text-center\" ng-show=\"vm.loading\">\n  <div class=\"dots-loader\">\n    Loading…\n  </div>\n</div>\n\n<div class=\"row text-center\" ng-show=\"vm.error\">\n  <h3>Sorry, something went wrong</h3>\n</div>\n"
 
 /***/ },
 /* 34 */
@@ -3018,20 +3023,154 @@ webpackJsonp([0],[
 	    var api = config.apiUrl;
 
 	    function send(data, cb) {
-	      $http.get(api + '/?tag=' + data.tag).then(function (response) {
+	      $http.get(api + '/?tag=' + data.tag).then(function () {
 	        //cb(response.data.error, response.data.data);
-	        console.log(response.data);
-	        var pos = rg.num(0, 100);
+	        var pos = rg.num(0, 80);
+	        var temp = 100 - pos;
+	        var neg = rg.num(0, temp);
+	        var neutr = 100 - pos - neg;
+
+	        var ukr = [];
+	        var fra = [];
+	        var usa = [];
+
+	        for (var i = 1; i < 31; i++) {
+	          ukr.push({ x: i, y: rg.num(-5, 5) });
+	          fra.push({ x: i, y: rg.num(-4, 3) });
+	          usa.push({ x: i, y: rg.num(-5, 5) });
+	        }
+
 	        cb(null, {
-	          count: rg.num(1000, 9999),
-	          neg: pos,
-	          pos: 100 - +pos,
-	          tag: data.tag
+	          donut: [{
+	            key: 'Positive',
+	            y: pos
+	          }, {
+	            key: 'Neutral',
+	            y: neutr
+	          }, {
+	            key: 'Negative',
+	            y: neg
+	          }],
+	          line: [{
+	            values: ukr,
+	            key: 'Ukraine',
+	            color: '#ff7f0e'
+	          }, {
+	            values: fra,
+	            key: 'France',
+	            color: '#2ca02c'
+	          }, {
+	            values: usa,
+	            key: 'USA',
+	            color: '#7777ff'
+	          }]
 	        });
 	      }, cb);
 	    }
 
-	    return { send: send };
+	    var donutOptions = {
+	      chart: {
+	        type: 'pieChart',
+	        height: 450,
+	        donut: true,
+	        x: function x(d) {
+	          return d.key;
+	        },
+	        y: function y(d) {
+	          return d.y;
+	        },
+	        showLabels: true,
+	        labelType: 'percent',
+	        pie: {
+	          startAngle: function startAngle(d) {
+	            return d.startAngle;
+	          },
+	          endAngle: function endAngle(d) {
+	            return d.endAngle;
+	          }
+	        },
+	        transitionDuration: 500,
+	        legend: {
+	          margin: {
+	            top: 5,
+	            right: 140,
+	            bottom: 5,
+	            left: 0
+	          }
+	        }
+	      }
+	    };
+
+	    function lineOptions(model) {
+	      return {
+	        chart: {
+	          type: 'lineChart',
+	          height: 450,
+	          margin: {
+	            top: 20,
+	            right: 20,
+	            bottom: 40,
+	            left: 55
+	          },
+	          x: function x(d) {
+	            return d.x;
+	          },
+	          y: function y(d) {
+	            return d.y;
+	          },
+	          useInteractiveGuideline: true,
+	          dispatch: {
+	            stateChange: function stateChange() {
+	              console.log('stateChange');
+	            },
+	            changeState: function changeState() {
+	              console.log('changeState');
+	            },
+	            tooltipShow: function tooltipShow() {
+	              console.log('tooltipShow');
+	            },
+	            tooltipHide: function tooltipHide() {
+	              console.log('tooltipHide');
+	            }
+	          },
+	          xAxis: {
+	            axisLabel: 'Month'
+	          },
+	          yAxis: {
+	            axisLabel: 'Sentiment',
+	            tickFormat: function tickFormat(d) {
+	              return d3.format('.02f')(d);
+	            },
+	            axisLabelDistance: 30
+	          },
+	          callback: function callback() {
+	            console.log('!!! lineChart callback !!!');
+	          }
+	        },
+	        title: {
+	          enable: true,
+	          text: 'Results for tag #' + model.tag
+	        },
+	        subtitle: {
+	          enable: true,
+	          text: 'June, 2015',
+	          css: {
+	            'text-align': 'center',
+	            margin: '10px 13px 0px 7px'
+	          }
+	        },
+	        caption: {
+	          enable: true,
+	          html: '<b>Figure 1.</b> Lorem ipsum',
+	          css: {
+	            'text-align': 'justify',
+	            margin: '10px 13px 0px 7px'
+	          }
+	        }
+	      };
+	    }
+
+	    return { send: send, donutOptions: donutOptions, lineOptions: lineOptions };
 	  }]);
 	};
 
