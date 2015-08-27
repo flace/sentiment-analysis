@@ -9,72 +9,50 @@ export default ngModule => {
       function send(data, cb) {
         $http.get(`${api}/?tag=${data.tag}`).then(() => {
           //cb(response.data.error, response.data.data);
-          let pos = rg.num(0, 100);
+          let pos = rg.num(0, 80);
           let temp = 100 - pos;
           let neg = rg.num(0, temp);
           let neutr = 100 - pos - neg;
+
+          let ukr = [];
+          let fra = [];
+          let usa = [];
+
+          for (let i = 1; i < 31; i++) {
+            ukr.push({x: i, y: rg.num(-5, 5)});
+            fra.push({x: i, y: rg.num(-4, 3)});
+            usa.push({x: i, y: rg.num(-5, 5)});
+          }
+
           cb(null, {
             donut: [
               {
-                key: 'pos',
+                key: 'Positive',
                 y: pos
               },
               {
-                key: 'neutr',
+                key: 'Neutral',
                 y: neutr
               },
               {
-                key: 'neg',
+                key: 'Negative',
                 y: neg
               }
             ],
-            timeseries: [
+            line: [
               {
-                values: [
-                  {x: 1, y: rg.num(0, 10)},
-                  {x: 2, y: rg.num(0, 10)},
-                  {x: 3, y: rg.num(0, 10)},
-                  {x: 4, y: rg.num(0, 10)},
-                  {x: 5, y: rg.num(0, 10)},
-                  {x: 6, y: rg.num(0, 10)},
-                  {x: 7, y: rg.num(0, 10)},
-                  {x: 8, y: rg.num(0, 10)},
-                  {x: 9, y: rg.num(0, 10)},
-                  {x: 10, y: rg.num(0, 10)}
-                ],
-                key: 'Positive',
+                values: ukr,
+                key: 'Ukraine',
                 color: '#ff7f0e'
               },
               {
-                values: [
-                  {x: 1, y: rg.num(0, 10)},
-                  {x: 2, y: rg.num(0, 10)},
-                  {x: 3, y: rg.num(0, 10)},
-                  {x: 4, y: rg.num(0, 10)},
-                  {x: 5, y: rg.num(0, 10)},
-                  {x: 6, y: rg.num(0, 10)},
-                  {x: 7, y: rg.num(0, 10)},
-                  {x: 8, y: rg.num(0, 10)},
-                  {x: 9, y: rg.num(0, 10)},
-                  {x: 10, y: rg.num(0, 10)}
-                ],
-                key: 'Negative',
+                values: fra,
+                key: 'France',
                 color: '#2ca02c'
               },
               {
-                values: [
-                  {x: 1, y: rg.num(0, 10)},
-                  {x: 2, y: rg.num(0, 10)},
-                  {x: 3, y: rg.num(0, 10)},
-                  {x: 4, y: rg.num(0, 10)},
-                  {x: 5, y: rg.num(0, 10)},
-                  {x: 6, y: rg.num(0, 10)},
-                  {x: 7, y: rg.num(0, 10)},
-                  {x: 8, y: rg.num(0, 10)},
-                  {x: 9, y: rg.num(0, 10)},
-                  {x: 10, y: rg.num(0, 10)}
-                ],
-                key: 'Neutral',
+                values: usa,
+                key: 'USA',
                 color: '#7777ff'
               }
             ]
@@ -115,72 +93,74 @@ export default ngModule => {
         }
       };
 
-      let lineOptions = {
-        chart: {
-          type: 'lineChart',
-          height: 450,
-          margin: {
-            top: 20,
-            right: 20,
-            bottom: 40,
-            left: 55
-          },
-          x: function (d) {
-            return d.x;
-          },
-          y: function (d) {
-            return d.y;
-          },
-          useInteractiveGuideline: true,
-          dispatch: {
-            stateChange: function () {
-              console.log('stateChange');
+      function lineOptions(model) {
+        return {
+          chart: {
+            type: 'lineChart',
+            height: 450,
+            margin: {
+              top: 20,
+              right: 20,
+              bottom: 40,
+              left: 55
             },
-            changeState: function () {
-              console.log('changeState');
+            x: function (d) {
+              return d.x;
             },
-            tooltipShow: function () {
-              console.log('tooltipShow');
+            y: function (d) {
+              return d.y;
             },
-            tooltipHide: function () {
-              console.log('tooltipHide');
+            useInteractiveGuideline: true,
+            dispatch: {
+              stateChange: function () {
+                console.log('stateChange');
+              },
+              changeState: function () {
+                console.log('changeState');
+              },
+              tooltipShow: function () {
+                console.log('tooltipShow');
+              },
+              tooltipHide: function () {
+                console.log('tooltipHide');
+              }
+            },
+            xAxis: {
+              axisLabel: 'Month'
+            },
+            yAxis: {
+              axisLabel: 'Sentiment',
+              tickFormat: function (d) {
+                return d3.format('.02f')(d);
+              },
+              axisLabelDistance: 30
+            },
+            callback: function () {
+              console.log('!!! lineChart callback !!!');
             }
           },
-          xAxis: {
-            axisLabel: 'Time (ms)'
+          title: {
+            enable: true,
+            text: 'Results for tag #' + model.tag
           },
-          yAxis: {
-            axisLabel: 'Voltage (v)',
-            tickFormat: function (d) {
-              return d3.format('.02f')(d);
-            },
-            axisLabelDistance: 30
+          subtitle: {
+            enable: true,
+            text: 'June, 2015',
+            css: {
+              'text-align': 'center',
+              margin: '10px 13px 0px 7px'
+            }
           },
-          callback: function (chart) {
-            console.log('!!! lineChart callback !!!', chart);
+          caption: {
+            enable: true,
+            html: '<b>Figure 1.</b> Lorem ipsum',
+            css: {
+              'text-align': 'justify',
+              margin: '10px 13px 0px 7px'
+            }
           }
-        },
-        title: {
-          enable: true,
-          text: 'Title for Line Chart'
-        },
-        subtitle: {
-          enable: true,
-          text: 'Subtitle for simple line chart',
-          css: {
-            'text-align': 'center',
-            margin: '10px 13px 0px 7px'
-          }
-        },
-        caption: {
-          enable: true,
-          html: '<b>Figure 1.</b> Lorem ipsum',
-          css: {
-            'text-align': 'justify',
-            margin: '10px 13px 0px 7px'
-          }
-        }
-      };
+        };
+      }
 
       return {send, donutOptions, lineOptions};
     }
