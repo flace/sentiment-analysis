@@ -19,6 +19,9 @@ export default ngModule => {
       vm.model = {};
 
       vm.send = () => {
+        vm.donutOptions = mainFactory.donutOptions;
+        vm.lineOptions = mainFactory.lineOptions(vm.model);
+
         vm.done = false;
         vm.loading = true;
         vm.error = false;
@@ -28,7 +31,9 @@ export default ngModule => {
             vm.error = true;
             return;
           }
-          vm.result = data;
+          vm.donutData = data.donut;
+          vm.lineData = data.line;
+
           vm.done = true;
         });
         vm.model = {};

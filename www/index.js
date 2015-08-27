@@ -1,4 +1,4 @@
-let ngModule = angular.module('app', ['ui.router']);
+let ngModule = angular.module('app', ['ui.router', 'nvd3']);
 
 ngModule.config(['$stateProvider', '$urlRouterProvider',
   function ($stateProvider, $urlRouterProvider) {

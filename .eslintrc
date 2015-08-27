@@ -15,7 +15,8 @@
     "angular": 2,
     "jQuery": 2,
     "ON_DEV": 2,
-    "ON_PROD": 2
+    "ON_PROD": 2,
+    "d3": 2
   },
   "rules": {
     // Possible Errors
