@@ -1,45 +1,48 @@
-from http.server import BaseHTTPRequestHandler, HTTPServer
-import time
 import numpy as np
+import time
+from http.server import BaseHTTPRequestHandler, HTTPServer
+from twitter_api import get_twitter_api, extract_tweets
+from twitter_analyzer import analyze_tweets
+from response_generator import generate_response
 
-
-def get_tweets(search_tag):
-	"""
-	STUB (no connection to Twitter for a moment)
-	Generating a random sequence of N numbers, where N is the length of a query tag.
-	"""
-	N = len(search_tag)
-	scores = np.random.randint(30, size=N)
-	return ",".join([str(score) for score in scores])
 
 
 class MyHandler(BaseHTTPRequestHandler):
+	
 	def do_GET(self):
 		self.send_response(200)
 		self.send_header("Content-type", "application/json")
 		self.end_headers()
 
 		search_tag = self.path[1:]
-		tweets_string = get_tweets(search_tag)
-		
-		self.wfile.write(bytes("{\
-			\"searchTag\": \"" + search_tag + "\",\
-			\"result\": \"" + tweets_string + "\"}",\
-			 "utf-8"))
+
+		# TODO do not get twitter API at each GET request. Externalize it and pass as a parameter
+		api_instance = get_twitter_api()
+		print("search_tag:", search_tag)
+		print("0. api_instance:", api_instance)
+		tweets = extract_tweets(api_instance, search_tag)
+		all_scores = analyze_tweets(tweets)
+		response_str = generate_response(all_scores)
+
+		self.wfile.write(bytes(response_str, "utf-8"))
 
 
 
-HOST = "localhost"
-PORT = 8822
+def start_server():
+	HOST = "localhost"
+	PORT = 8822
+	server = HTTPServer((HOST, PORT), MyHandler)
+	print(time.asctime(), "Server Starts - %s:%s" % (HOST, PORT))
+	
+	try:
+		server.serve_forever()
+	except KeyboardInterrupt:
+		pass
+
+	server.server_close()
+	print(time.asctime(), "Server Stops - %s:%s" % (HOST, PORT))
+	
 
 
-my_server = HTTPServer((HOST, PORT), MyHandler)
-print(time.asctime(), "Server Starts - %s:%s" % (HOST, PORT))
-
-try:
-	my_server.serve_forever()
-except KeyboardInterrupt:
-	pass
-
-my_server.server_close()
-print(time.asctime(), "Server Stops - %s:%s" % (HOST, PORT))
+if __name__ == "__main__":
+	start_server()
