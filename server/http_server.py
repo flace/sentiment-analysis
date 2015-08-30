@@ -1,6 +1,7 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import time
 import numpy as np
+import os
 
 
 def get_tweets(search_tag):
