@@ -32,7 +32,7 @@ var config = {
 
   plugins: [
     new webpack.DefinePlugin({
-      ON_DEV: process.env.NODE_ENV === 'development',
+      ON_DEV: process.env.NODE_ENV !== 'production',
       ON_PROD: process.env.NODE_ENV === 'production'
     }),
     //new webpack.optimize.CommonsChunkPlugin('common', 'common.js'),
