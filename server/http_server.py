@@ -30,7 +30,7 @@ class MyHandler(BaseHTTPRequestHandler):
 
 
 
-HOST = "localhost"
+HOST = "0.0.0.0"
 PORT = int(os.environ.get("PORT", 8822))
 
 
