@@ -2879,7 +2879,7 @@ webpackJsonp([0],[
 
 	exports['default'] = function (ngModule) {
 	  var config = {};
-	  config.apiUrl =  false ? 'https://sent-a.herokuapp.com' : 'http://localhost:8822';
+	  config.apiUrl =  true ? 'https://sent-a.herokuapp.com' : 'http://localhost:8822';
 	  ngModule.constant('config', config);
 	};
 
