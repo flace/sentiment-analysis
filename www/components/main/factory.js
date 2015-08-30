@@ -7,7 +7,7 @@ export default ngModule => {
       let api = config.apiUrl;
 
       function send(data, cb) {
-        $http.get(`${api}/?tag=${data.tag}`).then(() => {
+        $http.get(`${api}/${data.tag}`).then(() => {
           //cb(response.data.error, response.data.data);
           let pos = rg.num(0, 80);
           let temp = 100 - pos;
