@@ -2,6 +2,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import time
 import numpy as np
 import os
+import json
 
 
 def get_tweets(search_tag):
@@ -24,10 +25,39 @@ class MyHandler(BaseHTTPRequestHandler):
 		search_tag = self.path[1:]
 		tweets_string = get_tweets(search_tag)
 
-		self.wfile.write(bytes("{\
-			\"searchTag\": \"" + search_tag + "\",\
-			\"result\": \"" + tweets_string + "\"}",\
-			 "utf-8"))
+		resp = {
+		    'error': False,
+		    'data': {
+				'donut': [
+					{
+						'key': 'Positive',
+						'y': 88
+					},
+					{
+						'key': 'Neutral',
+						'y': 10
+					},
+					{
+						'key': 'Negative',
+						'y': 2
+					}
+				],
+				'line': [
+					{
+						'values': [
+							{'x': '2015-8-26', 'y': 1},
+							{'x': '2015-8-27', 'y': 3},
+							{'x': '2015-8-28', 'y': 2},
+							{'x': '2015-8-29', 'y': 2},
+							{'x': '2015-8-30', 'y': 3}
+						],
+						'key': 'Worldwide'
+					}
+				]
+			}
+		}
+
+		self.wfile.write(bytes(json.dumps(resp), "utf-8"))
 
 
 
