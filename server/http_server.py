@@ -21,7 +21,7 @@ class MyHandler(BaseHTTPRequestHandler):
 
 		search_tag = self.path[1:]
 		tweets_string = get_tweets(search_tag)
-		
+
 		self.wfile.write(bytes("{\
 			\"searchTag\": \"" + search_tag + "\",\
 			\"result\": \"" + tweets_string + "\"}",\
@@ -30,7 +30,7 @@ class MyHandler(BaseHTTPRequestHandler):
 
 
 HOST = "localhost"
-PORT = 8822
+PORT = int(os.environ.get("PORT", 8822))
 
 
 my_server = HTTPServer((HOST, PORT), MyHandler)
