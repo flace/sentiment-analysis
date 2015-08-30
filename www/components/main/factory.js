@@ -1,4 +1,4 @@
-let rg = require('rangen');
+//let rg = require('rangen');
 
 export default ngModule => {
   ngModule.factory('MainFactory', [
@@ -7,56 +7,56 @@ export default ngModule => {
       let api = config.apiUrl;
 
       function send(data, cb) {
-        $http.get(`${api}/?tag=${data.tag}`).then(() => {
-          //cb(response.data.error, response.data.data);
-          let pos = rg.num(0, 80);
-          let temp = 100 - pos;
-          let neg = rg.num(0, temp);
-          let neutr = 100 - pos - neg;
-
-          let ukr = [];
-          let fra = [];
-          let usa = [];
-
-          for (let i = 1; i < 31; i++) {
-            ukr.push({x: i, y: rg.num(-5, 5)});
-            fra.push({x: i, y: rg.num(-4, 3)});
-            usa.push({x: i, y: rg.num(-5, 5)});
-          }
-
-          cb(null, {
-            donut: [
-              {
-                key: 'Positive',
-                y: pos
-              },
-              {
-                key: 'Neutral',
-                y: neutr
-              },
-              {
-                key: 'Negative',
-                y: neg
-              }
-            ],
-            line: [
-              {
-                values: ukr,
-                key: 'Ukraine',
-                color: '#ff7f0e'
-              },
-              {
-                values: fra,
-                key: 'France',
-                color: '#2ca02c'
-              },
-              {
-                values: usa,
-                key: 'USA',
-                color: '#7777ff'
-              }
-            ]
-          });
+        $http.get(`${api}/${data.tag}`).then(response => {
+          cb(response.data.error, response.data.data);
+          //let pos = rg.num(0, 80);
+          //let temp = 100 - pos;
+          //let neg = rg.num(0, temp);
+          //let neutr = 100 - pos - neg;
+          //
+          //let ukr = [];
+          //let fra = [];
+          //let usa = [];
+          //
+          //for (let i = 1; i < 31; i++) {
+          //  ukr.push({x: i, y: rg.num(-5, 5)});
+          //  fra.push({x: i, y: rg.num(-4, 3)});
+          //  usa.push({x: i, y: rg.num(-5, 5)});
+          //}
+          //
+          //cb(null, {
+          //  donut: [
+          //    {
+          //      key: 'Positive',
+          //      y: pos
+          //    },
+          //    {
+          //      key: 'Neutral',
+          //      y: neutr
+          //    },
+          //    {
+          //      key: 'Negative',
+          //      y: neg
+          //    }
+          //  ],
+          //  line: [
+          //    {
+          //      values: ukr,
+          //      key: 'Ukraine',
+          //      color: '#ff7f0e'
+          //    },
+          //    {
+          //      values: fra,
+          //      key: 'France',
+          //      color: '#2ca02c'
+          //    },
+          //    {
+          //      values: usa,
+          //      key: 'USA',
+          //      color: '#7777ff'
+          //    }
+          //  ]
+          //});
         }, cb);
       }
 
