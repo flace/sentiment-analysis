@@ -1,5 +1,3 @@
-//let rg = require('rangen');
-
 export default ngModule => {
   ngModule.factory('MainFactory', [
     '$http', 'config',
@@ -8,55 +6,17 @@ export default ngModule => {
 
       function send(data, cb) {
         $http.get(`${api}/${data.tag}`).then(response => {
-          cb(response.data.error, response.data.data);
-          //let pos = rg.num(0, 80);
-          //let temp = 100 - pos;
-          //let neg = rg.num(0, temp);
-          //let neutr = 100 - pos - neg;
-          //
-          //let ukr = [];
-          //let fra = [];
-          //let usa = [];
-          //
-          //for (let i = 1; i < 31; i++) {
-          //  ukr.push({x: i, y: rg.num(-5, 5)});
-          //  fra.push({x: i, y: rg.num(-4, 3)});
-          //  usa.push({x: i, y: rg.num(-5, 5)});
-          //}
-          //
-          //cb(null, {
-          //  donut: [
-          //    {
-          //      key: 'Positive',
-          //      y: pos
-          //    },
-          //    {
-          //      key: 'Neutral',
-          //      y: neutr
-          //    },
-          //    {
-          //      key: 'Negative',
-          //      y: neg
-          //    }
-          //  ],
-          //  line: [
-          //    {
-          //      values: ukr,
-          //      key: 'Ukraine',
-          //      color: '#ff7f0e'
-          //    },
-          //    {
-          //      values: fra,
-          //      key: 'France',
-          //      color: '#2ca02c'
-          //    },
-          //    {
-          //      values: usa,
-          //      key: 'USA',
-          //      color: '#7777ff'
-          //    }
-          //  ]
-          //});
+          if (response.data.error || !response.data.data) {
+            return cb(true);
+          }
+          if (response.data.data.line) {
+            response.data.data.line.forEach(line => {
+              line.values.forEach(val => {
+                val.x = new Date(val.x);
+              });
+            });
+            cb(response.data.error, response.data.data);
+          }
         }, cb);
       }
 
@@ -111,25 +71,29 @@ export default ngModule => {
               return d.y;
             },
             useInteractiveGuideline: true,
-            dispatch: {
-              stateChange: function () {
-                console.log('stateChange');
-              },
-              changeState: function () {
-                console.log('changeState');
-              },
-              tooltipShow: function () {
-                console.log('tooltipShow');
-              },
-              tooltipHide: function () {
-                console.log('tooltipHide');
+            //dispatch: {
+            //  stateChange: function () {
+            //    console.log('stateChange');
+            //  },
+            //  changeState: function () {
+            //    console.log('changeState');
+            //  },
+            //  tooltipShow: function () {
+            //    console.log('tooltipShow');
+            //  },
+            //  tooltipHide: function () {
+            //    console.log('tooltipHide');
+            //  }
+            //},
+            xAxis: {
+              axisLabel: 'Date',
+              tickFormat: function (d) {
+                return d3.time.format('%b, %d')(new Date(d));
               }
             },
-            xAxis: {
-              axisLabel: 'Month'
-            },
+            xScale: d3.time.scale(),
             yAxis: {
-              axisLabel: 'Sentiment',
+              axisLabel: 'Points',
               tickFormat: function (d) {
                 return d3.format('.02f')(d);
               },
@@ -142,23 +106,23 @@ export default ngModule => {
           title: {
             enable: true,
             text: 'Results for tag #' + model.tag
-          },
-          subtitle: {
-            enable: true,
-            text: 'June, 2015',
-            css: {
-              'text-align': 'center',
-              margin: '10px 13px 0px 7px'
-            }
-          },
-          caption: {
-            enable: true,
-            html: '<b>Figure 1.</b> Lorem ipsum',
-            css: {
-              'text-align': 'justify',
-              margin: '10px 13px 0px 7px'
-            }
           }
+          //subtitle: {
+          //  enable: true,
+          //  text: 'June, 2015',
+          //  css: {
+          //    'text-align': 'center',
+          //    margin: '10px 13px 0px 7px'
+          //  }
+          //},
+          //caption: {
+          //  enable: true,
+          //  html: '<b>Figure 1.</b> Lorem ipsum',
+          //  css: {
+          //    'text-align': 'justify',
+          //    margin: '10px 13px 0px 7px'
+          //  }
+          //}
         };
       }
 
