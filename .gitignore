@@ -2,3 +2,7 @@
 node_modules
 public
 notebooks
+data
+server/.ipynb_checkpoints
+server/__pycache__
+server/data
