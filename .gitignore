@@ -2,7 +2,5 @@
 node_modules
 public
 notebooks
-data
-server/.ipynb_checkpoints
+.DS_Store
 server/__pycache__
-server/data
