@@ -2,32 +2,32 @@ import numpy as np
 import time
 import os
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from twitter_api import get_twitter_api, extract_tweets
-from twitter_analyzer import analyze_tweets
+from twitter_api import get_twitter_api, extract_9days_tweets
 from response_generator import generate_response
 
 
-
 class MyHandler(BaseHTTPRequestHandler):
-	
+	app_route = '/sentiment/'
+
 	def do_GET(self):
 		self.send_response(200)
 		self.send_header('Content-type', 'application/json')
 		self.send_header('Access-Control-Allow-Origin', '*')
 		self.end_headers()
 
-		search_tag = self.path[1:]
+		full_path = self.path
+		if not full_path.startswith(self.app_route):
+			self.wfile.write(bytes('{"error": true, "message": "please use route ' + self.app_route + \
+				' in your request"}', 'utf-8'))
 
-		# TODO do not get twitter API at each GET request. Externalize it and pass as a parameter
-		api_instance = get_twitter_api()
-		print('search_tag:', search_tag)
-		print('0. api_instance:', api_instance)
-		tweets = extract_tweets(api_instance, search_tag)
-		all_scores = analyze_tweets(tweets)
-		response_str = generate_response(all_scores)
-
-		self.wfile.write(bytes(response_str, 'utf-8'))
-
+		else:
+			search_tag = full_path.replace(self.app_route, "")
+			print('\t\tsearch_tag:', search_tag)
+			# TODO do not get twitter API at each GET request. Externalize it and pass as a parameter
+			api_instance = get_twitter_api()
+			tweets_by_day = extract_9days_tweets(api_instance, search_tag)
+			response_str = generate_response(tweets_by_day)
+			self.wfile.write(bytes(response_str, 'utf-8'))
 
 
 def start_server():
