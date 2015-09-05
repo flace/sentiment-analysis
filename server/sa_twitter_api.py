@@ -25,10 +25,10 @@ def get_twitter_api():
 	Get an instance of Twitter API object, 
 	using authentification parameters for "sentiment-analysis-hackaton" application
 	"""
-	consumer_key = "0SbsNhX2UzGkkjkIXsuBSgzMe"
-	consumer_secret = "CSVmQdIjV5gefccRaWvplBfmRlr9NFrvxtfXV6sEUQ4z8qKfsR"
-	access_token_key = "2933845522-ezw0M1g8rybxRzkho6ZbKq2mhcjtBD4ar009vCT"
-	access_token_secret = "p6k0FOSMJv50FSPIKakYGYDyJBVWeeTDuNsa7ZueO30Ex"
+	consumer_key = "***"
+	consumer_secret = "***"
+	access_token_key = "***"
+	access_token_secret = "***"
 
 	oauth = OAuth(access_token_key, access_token_secret, consumer_key, consumer_secret)
 	# Initiate the connection to Twitter REST API
