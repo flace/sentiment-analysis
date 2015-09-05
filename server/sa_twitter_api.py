@@ -1,7 +1,7 @@
 # Import the necessary methods from "twitter" library
 from twitter import Twitter, OAuth
 import re
-from dates import get_today, minus_one_day
+from sa_dates import get_today, minus_one_day
 
 
 class Tweet:
@@ -61,7 +61,7 @@ def extract_9days_tweets(api_instance, search_tag):
         nine_days.append(current_day)
         current_day = minus_one_day(current_day)
         
-    print(nine_days)
+    #print(nine_days)
     
     for day in nine_days:
         tweets = extract_tweets(api_instance, search_tag, day)

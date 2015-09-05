@@ -1,16 +1,12 @@
 import re
-from emotions_dict import emotions_dict
+from sa_emotions_dict import emotions_dict
 
-
-def display_tweets(tweets):
-    for tweet in tweets:
-        print("\n" + tweet.to_string())
 
 def analyze_tweets(tweets):
     all_scores = []
     for tweet in tweets: 
-        print("\n" + tweet.created_at)
-        print(tweet.text)
+        #print("\n" + tweet.created_at)
+        #print(tweet.text)
         words = tweet.text.split(" ")
         #print(words)
         tweet_score = 0
@@ -23,8 +19,8 @@ def analyze_tweets(tweets):
                 if matched_word in emotions_dict:
                     tweet_score += emotions_dict[matched_word] 
 
-        print(matched_words)
-        print("score", tweet_score)
+        #print(matched_words)
+        #print("score", tweet_score)
         all_scores.append(tweet_score)
         
     return all_scores
