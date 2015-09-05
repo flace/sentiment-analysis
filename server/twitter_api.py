@@ -1,6 +1,8 @@
 # Import the necessary methods from "twitter" library
-from twitter import Twitter, OAuth#, TwitterHTTPError, TwitterStream
+from twitter import Twitter, OAuth
 import re
+from dates import get_today, minus_one_day
+
 
 class Tweet:
     """
@@ -34,9 +36,9 @@ def get_twitter_api():
 	return twitter
 
 
-def extract_tweets(api_instance, query, lang="en"):
-
-    response = api_instance.search.tweets(q=query, lang=lang)
+def extract_tweets(api_instance, search_tag, until_date):
+    query = search_tag + ' until:' + until_date
+    response = api_instance.search.tweets(q=query, lang='en', count=100)
     tweets = []
     for item in response["statuses"]:
         screen_name = item["user"]["screen_name"] 
@@ -45,3 +47,24 @@ def extract_tweets(api_instance, query, lang="en"):
         tweet = Tweet(screen_name=screen_name, created_at=created_at, text=text)
         tweets.append(tweet)
     return tweets
+
+
+def extract_9days_tweets(api_instance, search_tag):
+    """
+    Returns dict {date: [tweets]}
+    """
+    tweets_by_day = {}
+    
+    nine_days = []
+    current_day = get_today()
+    for i in range(9):
+        nine_days.append(current_day)
+        current_day = minus_one_day(current_day)
+        
+    print(nine_days)
+    
+    for day in nine_days:
+        tweets = extract_tweets(api_instance, search_tag, day)
+        tweets_by_day[day] = tweets
+        
+    return tweets_by_day

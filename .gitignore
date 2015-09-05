@@ -3,4 +3,6 @@ node_modules
 public
 notebooks
 .DS_Store
+data
 server/__pycache__
+server/data
