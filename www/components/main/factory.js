@@ -6,17 +6,15 @@ export default ngModule => {
 
       function send(data, cb) {
         $http.get(`${api}/${data.tag}`).then(response => {
-          if (response.data.error || !response.data.data) {
-            return cb(true);
-          }
-          if (response.data.data.line) {
-            response.data.data.line.forEach(line => {
-              line.values.forEach(val => {
-                val.x = new Date(val.x);
-              });
+          let line = JSON.parse(response.data.data.line);
+          let donut = JSON.parse(response.data.data.donut);
+          line.forEach(l => {
+            l.values = JSON.parse(l.values);
+            l.values.forEach(val => {
+              val.x = new Date(val.x);
             });
-            cb(response.data.error, response.data.data);
-          }
+          });
+          cb(null, {line, donut});
         }, cb);
       }
 
