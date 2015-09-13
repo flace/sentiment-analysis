@@ -7,7 +7,7 @@ def generate_donut_data(scores_by_day):
     all_scores = []
     for day in scores_by_day:
         all_scores.extend(scores_by_day[day])
-    
+
     pos_count = 0
     neg_count = 0
     neutr_count = 0
@@ -18,10 +18,12 @@ def generate_donut_data(scores_by_day):
             neg_count += 1
         else:
             neutr_count += 1
-    return "[\
-    {'key': 'Positive', 'y': " + str(pos_count) + "},\
-    {'key': 'Neutral', 'y': " + str(neutr_count) + "},\
-    {'key': 'Negative', 'y': " + str(neg_count) + "}]"
+    don = [
+      {'key': 'Positive', 'y': str(pos_count)},
+      {'key': 'Neutral', 'y': str(neutr_count)},
+      {'key': 'Negative', 'y': str(neg_count)}
+    ]
+    return json.dumps(don)
 
 
 def generate_line_data(scores_by_day):
@@ -32,10 +34,10 @@ def generate_line_data(scores_by_day):
         average_scores_by_day[day] = np.around(mean, 2)
 
     values = []
-    for day in average_scores_by_day:
+    for day in sorted(average_scores_by_day):
         values.append({'x': day, 'y': average_scores_by_day[day]})
 
-    return "{'key': 'Worldwide', 'values': " + json.dumps(values) + "}"
+    return json.dumps([{'key': 'Worldwide', 'values': json.dumps(values)}])
 
 
 def generate_response(tweets_by_day):

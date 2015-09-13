@@ -5,19 +5,10 @@ var fs = require('fs');
 
 var config = {
   context: path.join(__dirname, '/www'),
-  //devtool: 'source-map',
-
   entry: {
     common: [
-      //'angular',
-      //'angular-ui-router',
       'bootstrap',
       './assets/libs/bootstrap/css/bootstrap.css',
-      //'./assets/libs/angular-nvd3/lib/d3.min.js',
-      //'./assets/libs/angular-nvd3/lib/nv.d3.js',
-      //'./assets/libs/angular-nvd3/dist/angular-nvd3.js',
-      //'./assets/libs/angular-nvd3/lib/nv.d3.css',
-      //'oclazyload',
       './index.js'
     ],
     libs: [
@@ -35,7 +26,6 @@ var config = {
       ON_DEV: process.env.NODE_ENV !== 'production',
       ON_PROD: process.env.NODE_ENV === 'production'
     }),
-    //new webpack.optimize.CommonsChunkPlugin('common', 'common.js'),
     new webpack.optimize.CommonsChunkPlugin('libs', 'libs.js'),
     new webpack.ProvidePlugin({
       $: 'jquery',
