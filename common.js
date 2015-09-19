@@ -2879,7 +2879,7 @@ webpackJsonp([0],[
 
 	exports['default'] = function (ngModule) {
 	  var config = {};
-	  config.apiUrl =  true ? 'https://sent-a.herokuapp.com' : 'http://localhost:8822';
+	  config.apiUrl =  true ? 'https://telnov.com/api/sentiment' : 'http://localhost:8888/api/sentiment';
 	  ngModule.constant('config', config);
 	};
 
@@ -3023,17 +3023,15 @@ webpackJsonp([0],[
 
 	    function send(data, cb) {
 	      $http.get(api + '/' + data.tag).then(function (response) {
-	        if (response.data.error || !response.data.data) {
-	          return cb(true);
-	        }
-	        if (response.data.data.line) {
-	          response.data.data.line.forEach(function (line) {
-	            line.values.forEach(function (val) {
-	              val.x = new Date(val.x);
-	            });
+	        var line = JSON.parse(response.data.data.line);
+	        var donut = JSON.parse(response.data.data.donut);
+	        line.forEach(function (l) {
+	          l.values = JSON.parse(l.values);
+	          l.values.forEach(function (val) {
+	            val.x = new Date(val.x);
 	          });
-	          cb(response.data.error, response.data.data);
-	        }
+	        });
+	        cb(null, { line: line, donut: donut });
 	      }, cb);
 	    }
 
