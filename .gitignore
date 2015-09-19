@@ -4,5 +4,5 @@ public
 notebooks
 .DS_Store
 data
-server/__pycache__
+python/__pycache__
 server/data

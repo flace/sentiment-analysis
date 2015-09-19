@@ -15,21 +15,16 @@ class Tweet:
         self.screen_name = screen_name
         self.created_at = created_at
         self.text = text
-        
+
     def to_string(self):
         return "author: {0}, created_at: {1}, text: {2}".format(self.screen_name, self.created_at, self.text)
 
 
-def get_twitter_api():
+def get_twitter_api(access_token_key, access_token_secret, consumer_key, consumer_secret):
 	"""
-	Get an instance of Twitter API object, 
+	Get an instance of Twitter API object,
 	using authentification parameters for "sentiment-analysis-hackaton" application
 	"""
-	consumer_key = "***"
-	consumer_secret = "***"
-	access_token_key = "***"
-	access_token_secret = "***"
-
 	oauth = OAuth(access_token_key, access_token_secret, consumer_key, consumer_secret)
 	# Initiate the connection to Twitter REST API
 	twitter = Twitter(auth=oauth)
@@ -41,7 +36,7 @@ def extract_tweets(api_instance, search_tag, until_date):
     response = api_instance.search.tweets(q=query, lang='en', count=100)
     tweets = []
     for item in response["statuses"]:
-        screen_name = item["user"]["screen_name"] 
+        screen_name = item["user"]["screen_name"]
         created_at = item["created_at"]
         text = item["text"]
         tweet = Tweet(screen_name=screen_name, created_at=created_at, text=text)
@@ -54,17 +49,17 @@ def extract_9days_tweets(api_instance, search_tag):
     Returns dict {date: [tweets]}
     """
     tweets_by_day = {}
-    
+
     nine_days = []
     current_day = get_today()
     for i in range(9):
         nine_days.append(current_day)
         current_day = minus_one_day(current_day)
-        
+
     #print(nine_days)
-    
+
     for day in nine_days:
         tweets = extract_tweets(api_instance, search_tag, day)
         tweets_by_day[day] = tweets
-        
+
     return tweets_by_day
